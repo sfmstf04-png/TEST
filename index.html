@@ -1,4 +1,4 @@
-<!doctype html>
+	<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -122,15 +122,18 @@
       const CURATOR_NOTE = "This is a digital experience that will showcase pictures showing how our Leaders became a good influence through wholeheartedly fulfilling their duty. And as a result, it led to the wholehearted fulfillment of duties by the ministers and ministerial workers and the Church officers";
 
       const GALLERY_DATA = [
-        { id: 1, file: "assets/pic1.jpg", description: "The beginning of a transformative journey in leadership. The beginning of a transformative journey in leadership.The beginning of a transformative journey in leadership. The beginning of a transformative journey in leadership.""  },
-        { id: 2, file: "assets/pic2.jpg", description: "Wholehearted fulfillment of duty in action." },
-        { id: 3, file: "assets/pic3.jpg", description: "Setting a standard of excellence for all to follow." },
-        { id: 4, file: "assets/pic4.jpg", description: "Ministerial unity through shared purpose and dedication." },
-        { id: 5, file: "assets/pic5.jpg", description: "The ripple effect of good influence within the Church." },
-        { id: 6, file: "assets/pic6.jpg", description: "Steadfast commitment despite challenges along the way." },
-        { id: 7, file: "assets/pic7.jpg", description: "Church officers lead with grace and determination." },
-        { id: 8, file: "assets/pic8.jpg", description: "Fostering growth and inspiration among the workers." },
-        { id: 9, file: "assets/pic9.jpg", description: "A moment of reflection on the weight of leadership." }
+        { id: 1, file: "assets/pic1.jpg", description: "Brother Angelo Eraño V. Manalo Deputy Executive Minister Iglesia Ni Cristo (Church Of Christ)" },
+        { id: 2, file: "assets/pic2.jpg", description: "Brother Angelo Eraño V. Manalo officiating a worship service at the Local Congregation of Commonwealth, Ecclesiastical District of Central." },
+        { id: 3, file: "assets/pic3.jpg", description: "Brother Rene J. Panoncillo officiating a worship service at the Local Congregation of Balintawak, Ecclesiastical District of CAMANAVA." },
+        { id: 4, file: "assets/pic4.jpg", description: "Brother Arnel R. Canicosa officiating a worship service at the Local Congregation of Pugad Lawin, Ecclesiastical District of Central." },
+        { id: 5, file: "assets/pic5.jpg", description: "Brother Arnel A. Tumanan officiating a worship service at the Local Congregation of Upper Bicutan, Ecclesiastical District of Makati." },
+        { id: 6, file: "assets/pic6.jpg", description: "Brother Romer D. Galang officiating a special gathering of TSV officers from different districts in the Visayas at the Local Congregation of Cebu City, Ecclesiastical District of Cebu City, Cebu." },
+        { id: 7, file: "assets/pic7.jpg", description: "Brother Antonio T. de Guzman Jr. officiating a worship service at the Local Congregation of Blumentritt, Ecclesiastical District of Maynila." },
+        { id: 8, file: "assets/pic8.jpg", description: "A minister of the gospel conducting Bible missionary activities." },
+        { id: 9, file: "assets/pic9.jpg", description: "A minister of the gospel leading the local officers in their weekly meeting." },
+        { id: 10, file: "assets/pic10.jpg", description: "A minister of the gospel conducting a counseling seminar for the brethren at the Local Congregation of Agsao, Ecclesiastical District of Romblon." },
+        { id: 11, file: "assets/pic11.jpg", description: "A ministerial worker conducting area visitations to the brethren." },
+        { id: 12, file: "assets/pic12.jpg", description: "A ministerial worker conducting a Bible study  on doctrines in his assigned area." }
       ];
 
       // 2. A-Frame Component Registration (Must be before scene)
@@ -144,9 +147,11 @@
             });
             
             this.el.addEventListener('mouseenter', () => {
+              // AUTO-POP: Show info card on hover/point
               const item = GALLERY_DATA.find(d => d.id === this.data.id);
               window.showInfoCard(item);
 
+              // Slide photo forward slightly for depth
               const canvas = this.el.querySelector('a-image');
               if (canvas) {
                 canvas.setAttribute('animation__pos', {
@@ -156,6 +161,7 @@
                 });
               }
 
+              // Enhance border glow
               const border = this.el.querySelector('.frame-border');
               if (border) {
                 border.setAttribute('material', 'emissive', '#D4AF37');
@@ -198,8 +204,10 @@
         });
       }
 
+      // 3. UI Functions
       window.currentItem = null;
 
+      // Screenshot Deterrence
       document.addEventListener('contextmenu', e => e.preventDefault());
       document.addEventListener('keydown', e => {
         if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p' || e.key === 'u')) {
@@ -210,6 +218,7 @@
 
       window.addEventListener('blur', () => {
         document.getElementById('protection-overlay').style.display = 'block';
+        // Stop audio if any, or hide other sensitive layers
       });
 
       window.addEventListener('focus', () => {
@@ -254,16 +263,31 @@
 
       window.enterAR = function() {
         const scene = document.querySelector('a-scene');
+        
+        // Secure Context Check
         if (!window.isSecureContext && window.location.hostname !== "localhost") {
-          alert("AR requires HTTPS to access the camera.");
+          alert("AR requires HTTPS to access the camera. If you are hosting on your own server, please ensure you have an SSL certificate (https://) for this domain.");
           return;
         }
+
+        // WebXR support check
         if (!navigator.xr) {
-          alert("WebXR/AR is not supported on this browser.");
+          alert("WebXR/AR is not supported on this browser or device. For AR, use a mobile device with Chrome or Safari.");
           return;
         }
+
         if (scene && scene.enterAR) scene.enterAR();
       };
+
+      // Check on load to warn user
+      window.addEventListener('DOMContentLoaded', () => {
+        if (!window.isSecureContext && window.location.hostname !== "localhost") {
+          const noteDisplay = document.getElementById('curator-note-display');
+          if (noteDisplay) {
+            noteDisplay.innerHTML += `<br><br><span class="text-red-400 font-bold block mt-2">⚠️ HTTPS Required: AR will be disabled unless served over a secure connection.</span>`;
+          }
+        }
+      });
 
       window.closeInstructions = function() {
         const modal = document.getElementById('instructions-modal');
@@ -294,7 +318,14 @@
       <a-assets id="gallery-assets"></a-assets>
 
       <a-camera id="main-camera" position="0 1.6 0" look-controls="pointerLockEnabled: false; touchEnabled: true;" wasd-controls="enabled: false">
-        <a-entity cursor="fuse: false; rayOrigin: mouse;" raycaster="objects: .clickable"></a-entity>
+        <a-entity
+          cursor="fuse: false; rayOrigin: mouse;"
+          raycaster="objects: .clickable"
+        ></a-entity>
+        
+
+
+
         <a-entity
           position="0 0 -1"
           geometry="primitive: ring; radiusInner: 0.015; radiusOuter: 0.025"
@@ -312,15 +343,19 @@
       <a-light type="ambient" intensity="0.8"></a-light>
       <a-light type="directional" position="1 5 2" intensity="0.6"></a-light>
       
+      <!-- Standard Matte Floor -->
       <a-plane id="floor" rotation="-90 0 0" width="100" height="100" color="#050505" material="roughness: 1; metalness: 0"></a-plane>
+      
       <a-sky id="sky" color="#000"></a-sky>
     </a-scene>
 
     <div id="protection-overlay"></div>
 
+    <!-- UI Overlay Container -->
     <div id="ui-container" class="fixed inset-0 z-50 pointer-events-none">
       <div class="absolute inset-0 pointer-events-none flex flex-col justify-between p-6 md:p-10">
       
+      <!-- Top Nav -->
       <div class="flex justify-between items-start pointer-events-auto relative z-10">
         <div class="glass px-6 py-4 rounded-2xl flex items-center gap-4">
           <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
@@ -337,16 +372,23 @@
         </button>
       </div>
 
+      <!-- Bottom Controls -->
       <div id="controls-container" class="flex flex-row justify-between items-end w-full pointer-events-none relative z-10">
+        
+        <!-- Info Card -->
         <div id="info-card" class="opacity-0 translate-y-10 pointer-events-none transition-all duration-500 glass p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] max-w-[320px] md:max-w-md w-full text-white relative overflow-hidden mb-4 border border-white/10">
+          <!-- Decorative Background Elements -->
           <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
           <div class="absolute bottom-0 left-0 w-24 h-24 bg-gold-500/5 rounded-full blur-2xl -ml-12 -mb-12 pointer-events-none"></div>
+          
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-30"></div>
           
+          <!-- Close Button -->
           <button onclick="window.showInfoCard(null)" class="absolute top-5 right-5 p-2 rounded-full hover:bg-white/15 text-white/30 hover:text-white transition-all duration-300 pointer-events-auto group border border-transparent hover:border-white/10">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="group-hover:rotate-90 transition-transform duration-300"><path d="M18 6L6 18M6 6l12 12"/></svg>
           </button>
  
+          <!-- Editorial Layout -->
           <div class="relative z-10">
             <button onclick="window.viewFullscreen()" id="view-fullscreen-btn" class="group w-full py-4 bg-white text-black rounded-xl font-display font-bold text-[10px] uppercase tracking-normal hover:bg-zinc-100 transition-all duration-300 flex items-center justify-center gap-3 pointer-events-auto active:scale-[0.98]">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="group-hover:scale-110 transition-transform flex-shrink-0"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -355,6 +397,7 @@
           </div>
         </div>
 
+        <!-- Launch Button -->
         <div class="pointer-events-auto flex flex-col items-end w-full md:w-auto">
           <button id="ar-launch-btn" onclick="window.enterAR()" class="group relative px-10 py-5 md:px-14 md:py-7 bg-white text-black rounded-full font-display font-bold flex items-center gap-4 md:gap-5 transition-all duration-500 hover:scale-105 active:scale-95 pointer-events-auto overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none"></div>
@@ -368,6 +411,7 @@
       </div>
       </div>
 
+      <!-- Fullscreen Image Modal -->
       <div id="fullscreen-modal" class="hidden fixed inset-0 z-[200] bg-black/95 opacity-0 transition-opacity duration-500 flex flex-col items-center justify-center p-4 md:p-10 pointer-events-auto">
         <button onclick="window.closeFullscreen()" class="absolute top-6 right-6 p-4 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-[210] pointer-events-auto">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -381,6 +425,7 @@
       </div>
     </div>
 
+    <!-- Instructions Modal -->
     <div id="instructions-modal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl transition-opacity duration-700 flex items-center justify-center p-8 text-center">
       <div class="absolute inset-0 opacity-20 overflow-hidden pointer-events-none">
         <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500/30 rounded-full blur-[120px] animate-pulse-soft"></div>
@@ -393,14 +438,16 @@
         </div>
         
         <h2 class="text-white text-5xl font-serif italic font-semibold mb-4 tracking-tight">STF Photo</h2>
-        <p class="text-white/40 font-display text-[10px] uppercase tracking-[0.4em] mb-10">VR-AR GALLERY</p>
+        <p class="text-white/40 font-display text-[10px] uppercase tracking-[0.4em] mb-10">AR Experience</p>
         
         <div class="glass-light p-8 rounded-[2rem] mb-10 text-left relative overflow-hidden">
           <h4 class="text-white/80 text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
             Description:
           </h4>
-          <p id="curator-note-display" class="text-white/50 text-xs leading-relaxed italic font-serif"></p>
+          <p id="curator-note-display" class="text-white/50 text-xs leading-relaxed italic font-serif">
+            <!-- Injected via script -->
+          </p>
         </div>
 
         <div class="space-y-4 mb-12">
@@ -414,7 +461,7 @@
           </div>
         </div>
 
-        <button onclick="window.closeInstructions()" class="w-full py-6 bg-white text-black rounded-[2rem] font-display font-bold uppercase tracking-widest hover:bg-white/90 transition-all active:scale-95 text-[14px]">
+        <button onclick="window.closeInstructions()" class="w-full py-6 bg-white text-black rounded-[2rem] font-display font-bold uppercase tracking-widest hover:bg-white/90 transition-all active:scale-95">
           Enter Exhibit
         </button>
       </div>
@@ -455,41 +502,49 @@
         }
       }
 
+      // Set Curator's Note
       const noteDisplay = document.getElementById('curator-note-display');
       if (noteDisplay) noteDisplay.innerText = `"${CURATOR_NOTE}"`;
 
-      // 3x3 Grid Config
-      const numCols = 3;
-      const arcPadding = 30; 
-      const yRowStep = 1.1;     
-      const radius = 4.2;    
+      // Grid Configuration
+      const numCols = 4; // Adjusted for 12 items (3x4 or 4x3)
+      const arcPadding = 26; // Degrees between columns
+      const yRowStep = 1.1;     // Vertical distance between rows
+      const radius = 4.8;    // Distance from the viewer
 
+      // Initialize Items
       GALLERY_DATA.forEach((item, index) => {
+        // 1. Create the Image Asset
         const img = document.createElement('img');
         img.id = `img-${item.id}`;
         img.src = item.file;
         img.crossOrigin = "anonymous";
         img.referrerPolicy = "no-referrer";
         img.onload = updateProgress;
-        img.onerror = updateProgress; 
+        img.onerror = updateProgress; // Continue anyway if one fails
         assets.appendChild(img);
 
+        // 2. Position Logic (Grid)
         const col = index % numCols;
         const row = Math.floor(index / numCols);
 
+        // Calculate horizontal position along an arc centered to viewer
         const angle = (col - (numCols - 1) / 2) * arcPadding;
         const rad = angle * (Math.PI / 180);
         
         let posX = Math.sin(rad) * radius;
         let posZ = -Math.cos(rad) * radius;
         
-        const rowOffset = (Math.floor(GALLERY_DATA.length / numCols) - 1) / 2;
+        // Calculate vertical position (Shifted to balance eye level and keep above floor)
+        const totalRows = Math.ceil(GALLERY_DATA.length / numCols);
+        const rowOffset = (totalRows - 1) / 2;
         const posY = (rowOffset - row) * yRowStep + 0.1; 
         
         const entity = document.createElement('a-entity');
         entity.setAttribute('position', `${posX} ${posY} ${posZ}`);
         entity.setAttribute('rotation', `0 ${-angle} 0`);
 
+        // 3. Create the Frame & Canvas (Landscape friendly)
         const baseH = 1.0; 
         const baseW = 1.6;
 
@@ -500,6 +555,7 @@
 
         container.appendChild(entity);
 
+        // 4. Dynamic Sizing Logic: Detect real image dimensions
         const checkImg = new Image();
         checkImg.src = item.file;
         checkImg.crossOrigin = "anonymous";
@@ -507,6 +563,8 @@
         checkImg.onload = function() {
           const ratio = checkImg.naturalWidth / checkImg.naturalHeight;
           let finalW, finalH;
+          
+          // Fit within baseW x baseH while maintaining aspect ratio (Contain)
           if (ratio > (baseW / baseH)) {
             finalW = baseW;
             finalH = baseW / ratio;
@@ -514,8 +572,11 @@
             finalH = baseH;
             finalW = baseH * ratio;
           }
+          
+          // Update A-Frame elements
           const canvas = document.getElementById(`canvas-${item.id}`);
           const border = document.getElementById(`frame-border-${item.id}`);
+          
           if (canvas) {
             canvas.setAttribute('width', finalW);
             canvas.setAttribute('height', finalH);
@@ -524,14 +585,19 @@
             border.setAttribute('width', finalW + 0.06);
             border.setAttribute('height', finalH + 0.06);
           }
+          
+          console.log(`Adjusted Item ${item.id}: Ratio ${ratio.toFixed(2)} -> Size ${finalW.toFixed(2)}x${finalH.toFixed(2)}`);
         };
       });
 
+      // AR Visibility
       const scene = document.querySelector('a-scene');
       scene.addEventListener('enter-vr', () => {
         if (scene.is('ar-mode')) {
+          // Hide environment to show camera feed
           document.getElementById('floor').setAttribute('visible', 'false');
           document.getElementById('sky').setAttribute('visible', 'false');
+          
           document.getElementById('ar-launch-btn').classList.add('hidden');
           document.getElementById('ar-mode-ui').classList.remove('hidden');
         }
@@ -539,6 +605,7 @@
       scene.addEventListener('exit-vr', () => {
         document.getElementById('floor').setAttribute('visible', 'true');
         document.getElementById('sky').setAttribute('visible', 'true');
+        
         document.getElementById('ar-launch-btn').classList.remove('hidden');
         document.getElementById('ar-mode-ui').classList.add('hidden');
       });
