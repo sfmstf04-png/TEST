@@ -1,4 +1,4 @@
-<!doctype html>
+	<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -122,21 +122,18 @@
       const CURATOR_NOTE = "This is a digital experience that will showcase pictures showing how our Leaders became a good influence through wholeheartedly fulfilling their duty. And as a result, it led to the wholehearted fulfillment of duties by the ministers and ministerial workers and the Church officers";
 
       const GALLERY_DATA = [
-        { id: 1, file: "assets/pic1.jpg", description: "Household of church officers at the Local Congregation of Commonwealth, Ecclesiastical District of Central after the worship service led by Brother Angelo Eraño V. Manalo." },
-        { id: 2, file: "assets/pic2.jpg", description: "Household of finance officers after the worship service led by Brother Eduardo V. Manalo at the Local Congregation of Taytay, Ecclesiastical District of Rizal." },
-        { id: 3, file: "assets/pic3.jpg", description: "Household of church officers after the worship service led by the Executive Minister in the Ecclesiastical District of Singapore." },
-        { id: 4, file: "assets/pic4.jpg", description: "Church officers after the worship service officiated by the Executive Minister at the Local Congregation of Tayuman, Ecclesiastical District of Maynila." },
-        { id: 5, file: "assets/pic5.jpg", description: "Church officers after the worship service led by the Deputy Executive Minister at the Local Congregation of Pasay, Ecclesiastical District of Makati." },
-        { id: 6, file: "assets/pic6.jpg", description: "Deaconesses after the worship service officiated by the Deputy Executive Minister at the Local Congregation of Skyline, Ecclesiastical District of CAMANAVA." },
-        { id: 7, file: "assets/pic7.jpg", description: "Finance officers happily waiting in line before the worship service officiated by Brother Angelo Eraño V. Manalo at the Local Congregation of Skyline, Ecclesiastical District of CAMANAVA." },
-        { id: 8, file: "assets/pic8.jpg", description: "Secretariat officers before the worship service officiated by the Deputy Executive Minister at the Local Congregation of Tarlac City, Ecclesiastical District of Tarlac City, Tarlac." },
-        { id: 9, file: "assets/pic9.jpg", description: "Choir members after the worship service led by the Deputy Executive Minister at the Local Congregation of Mindanao Avenue, Ecclesiastical District of Central." },
-        { id: 10, file: "assets/pic10.jpg", description: "SCAN officers attending a special worship service held in commemoration of the anniversary of the Society of Communicators and Networkers (SCAN) International, which was officiated by Brother Angelo Eraño V. Manalo at the Local Congregation of Ciudad de Victoria, Ecclesiastical District of Bulacan South." },
-        { id: 11, file: "assets/pic11.jpg", description: "A deacon leading the male brethren in an orderly seating arrangement." },
-        { id: 12, file: "assets/pic12.jpg", description: "TSV officers setting up the technical booth before a special gathering of church officers." },
-        { id: 13, file: "assets/pic13.jpg", description: "Local secretaries performing their duties." },
-        { id: 14, file: "assets/pic14.jpg", description: "Choir members leading the brethren in offering hymns of praise to the Lord God." },
-        { id: 15, file: "assets/pic15.jpg", description: "SCAN officers guiding the brethren before the start of the worship service." }
+        { id: 1, file: "assets/pic1.jpg", description: "Brother Angelo Eraño V. Manalo Deputy Executive Minister Iglesia Ni Cristo (Church Of Christ)" },
+        { id: 2, file: "assets/pic2.jpg", description: "Brother Angelo Eraño V. Manalo officiating a worship service at the Local Congregation of Commonwealth, Ecclesiastical District of Central." },
+        { id: 3, file: "assets/pic3.jpg", description: "Brother Rene J. Panoncillo officiating a worship service at the Local Congregation of Balintawak, Ecclesiastical District of CAMANAVA." },
+        { id: 4, file: "assets/pic4.jpg", description: "Brother Arnel R. Canicosa officiating a worship service at the Local Congregation of Pugad Lawin, Ecclesiastical District of Central." },
+        { id: 5, file: "assets/pic5.jpg", description: "Brother Arnel A. Tumanan officiating a worship service at the Local Congregation of Upper Bicutan, Ecclesiastical District of Makati." },
+        { id: 6, file: "assets/pic6.jpg", description: "Brother Romer D. Galang officiating a special gathering of TSV officers from different districts in the Visayas at the Local Congregation of Cebu City, Ecclesiastical District of Cebu City, Cebu." },
+        { id: 7, file: "assets/pic7.jpg", description: "Brother Antonio T. de Guzman Jr. officiating a worship service at the Local Congregation of Blumentritt, Ecclesiastical District of Maynila." },
+        { id: 8, file: "assets/pic8.jpg", description: "A minister of the gospel conducting Bible missionary activities." },
+        { id: 9, file: "assets/pic9.jpg", description: "A minister of the gospel leading the local officers in their weekly meeting." },
+        { id: 10, file: "assets/pic10.jpg", description: "A minister of the gospel conducting a counseling seminar for the brethren at the Local Congregation of Agsao, Ecclesiastical District of Romblon." },
+        { id: 11, file: "assets/pic11.jpg", description: "A ministerial worker conducting area visitations to the brethren." },
+        { id: 12, file: "assets/pic12.jpg", description: "A ministerial worker conducting a Bible study  on doctrines in his assigned area." }
       ];
 
       // 2. A-Frame Component Registration (Must be before scene)
@@ -510,8 +507,8 @@
       if (noteDisplay) noteDisplay.innerText = `"${CURATOR_NOTE}"`;
 
       // Grid Configuration
-      const numCols = 5;
-      const arcPadding = 24; // Degrees between columns
+      const numCols = 4; // Adjusted for 12 items (3x4 or 4x3)
+      const arcPadding = 26; // Degrees between columns
       const yRowStep = 1.1;     // Vertical distance between rows
       const radius = 4.8;    // Distance from the viewer
 
@@ -527,7 +524,7 @@
         img.onerror = updateProgress; // Continue anyway if one fails
         assets.appendChild(img);
 
-        // 2. Position Logic (3x3 Grid)
+        // 2. Position Logic (Grid)
         const col = index % numCols;
         const row = Math.floor(index / numCols);
 
@@ -539,7 +536,8 @@
         let posZ = -Math.cos(rad) * radius;
         
         // Calculate vertical position (Shifted to balance eye level and keep above floor)
-        const rowOffset = (Math.floor(GALLERY_DATA.length / numCols) - 1) / 2;
+        const totalRows = Math.ceil(GALLERY_DATA.length / numCols);
+        const rowOffset = (totalRows - 1) / 2;
         const posY = (rowOffset - row) * yRowStep + 0.1; 
         
         const entity = document.createElement('a-entity');
